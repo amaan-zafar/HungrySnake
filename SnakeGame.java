@@ -16,7 +16,6 @@ public class SnakeGame{
         System.out.println("Press 1 to move the snake downwards");
         System.out.println("Press 2 to move the snake to the Left");
         System.out.println("Press 3 to move the snake to the Right");
-        System.out.println("\n\nDifficulty Levels :");
         for (int n : GameBoard.boardSizes) {
             System.out.println(n + "x" + n + " size board :");
             for (int i = 0; i < n; i++) {
@@ -26,6 +25,7 @@ public class SnakeGame{
                 System.out.println();
             }
         }
+        System.out.println("\n\nDifficulty Levels :");
         System.out.println("Easy");
         System.out.println("Medium");
         System.out.println("Hard");
