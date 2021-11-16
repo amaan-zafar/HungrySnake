@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 class Game extends TimerTask {
 
-    static int n = 15;
+    static int n = 10;
 
     static Timer timer;
 
@@ -46,17 +46,19 @@ class Game extends TimerTask {
         return ch;
     }
 
-    @Override
-    public void run() {
-        // printBoard
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+    private void printBoard () {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 System.out.print(mat[i][j] + " ");
             }
             System.out.println();
         }
         System.out.println();
+    }
 
+    @Override
+    public void run() {
+        printBoard();
 
         if (headX+x_dir[newHeadDir]==foodX && headY+y_dir[newHeadDir]==foodY) {
             mat[headX][headY] = '*';
@@ -76,7 +78,7 @@ class Game extends TimerTask {
             System.out.println("Game Ended!");
             gameStatus = false;
             timer.cancel();
-        }
+        } else
         mat[headX][headY] = getHeadChar(headDir);
     }
 
@@ -91,22 +93,25 @@ class Game extends TimerTask {
                 mat[i][j] = '.';
             }
         }
-        headX = getRandomInt(1, n-1);
-        headY = getRandomInt(1, n-1);
+        headX = getRandomInt(1, n-2);
+        headY = getRandomInt(1, n-2);
         headDir = getRandomInt(0, 3);
         newHeadDir = headDir;
         tailX = headX - x_dir[headDir];
         tailY = headY - y_dir[headDir];
         mat[headX][headY] = getHeadChar(headDir);
         mat[headX-x_dir[headDir]][headY-y_dir[headDir]] = '*';
+        int i = 0;
         do {
-            foodX = getRandomInt(0, n);
-            foodY = getRandomInt(0, n);
-        } while (!(mat[foodX][foodY]=='.'));
+            foodX = getRandomInt(0, n-1);
+            foodY = getRandomInt(0, n-1);
+            System.out.println("Loop " + foodX + " " + foodY);
+            i++;
+        } while (mat[foodX][foodY] !='.');
         mat[foodX][foodY] = '@';
 
         timer = new Timer();
-        timer.schedule(new Game(), 0, 2000);
+        timer.schedule(new Game(), 1000, 2000);
         while (gameStatus) {
             Scanner sc = new Scanner(System.in);
             Game.userInput = sc.nextLine().charAt(0);

@@ -1,21 +1,20 @@
 import java.util.ArrayList;
+import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameBoard extends TimerTask{
+    public static ArrayList<Integer> boardSizes = new ArrayList<Integer>();
     private int sizeSelected;
     public char[][] matrix;
-    public static ArrayList<Integer> boardSizes = new ArrayList<Integer>();
-    int x_dir[] = {-1, 1, 0, 0};
-    int y_dir[] = {0, 0, -1, 1};
-    private int headX;
-    private int headY;
-    private int headDir;
-    private int newHeadDir;
-    private int tailX;
-    private int tailY;
-    private int foodX;
-    private int foodY;
+    private Snake snake;
+    private Food food;
+    boolean gameStatus = true;
+    private Timer timer;
+
+    public GameBoard(Timer timer) {
+        this.timer = timer;
+    }
 
     public static void addBoardSize (int size) {
         boardSizes.add(size);
@@ -27,8 +26,8 @@ public class GameBoard extends TimerTask{
         }
     }
 
-    public void selectSize (int index) {
-        sizeSelected = boardSizes.get(index);
+    public void initGameBoard (int index) {
+        this.sizeSelected = boardSizes.get(index);
         matrix = new char[sizeSelected][sizeSelected];
         for (int i = 0; i < sizeSelected; i++) {
             for (int j = 0; j < sizeSelected; j++) {
@@ -38,88 +37,51 @@ public class GameBoard extends TimerTask{
     }
 
     public int getSizeSelected () {
-        return sizeSelected;
-    }
-
-    char getHeadChar (int n) {
-        char ch;
-        switch (n) {
-            case 0:
-                ch = '^';
-                break;
-            case 1:
-                ch = 'v';
-                break;
-            case 2:
-                ch = '<';
-                break;
-            case 3:
-                ch = '>';
-                break;
-        
-            default:
-                ch = '~';
-                break;
-        }
-        return ch;
+        return this.sizeSelected;
     }
 
     
-    int getRandomInt (int min, int max) {
+    private int getRandomInt (int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max);
     }
 
     public void positionSnake (Snake snake) {
-        headX = snake.head.x;
-        headY = snake.head.y;
-        tailX = snake.tail.x;
-        tailY = snake.tail.y;
-        headDir = snake.headDir;
-        newHeadDir = snake.newHeadDir;
-        matrix[headX][headY] = getHeadChar(headDir);
-        matrix[headX-x_dir[headDir]][headY-y_dir[headDir]] = '*';
+        this.snake = snake;
+        this.matrix[snake.getHead().getX()][snake.getHead().getY()] = snake.getHead().getSymbol();
+        this.matrix[snake.getTail().getX()][snake.getTail().getY()] = snake.getTail().getSymbol();
     }
 
-    public void positionFood () {
+    public void positionFood (Food food) {
+        int x, y;
         do {
-            foodX = getRandomInt(0, sizeSelected);
-            foodY = getRandomInt(0, sizeSelected);
-        } while (!(matrix[foodX][foodY]=='.'));
-        matrix[foodX][foodY] = '@';
+            x = getRandomInt(0, sizeSelected);
+            y = getRandomInt(0, sizeSelected);
+        } while (matrix[x][y] != '.');
+        matrix[x][y] = food.getSymbol();
+        food.setX(x);
+        food.setY(y);
+        this.food = food;
     }
 
-    @Override
-    public void run() {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+    private void printBoard () {
+        for (int i = 0; i < sizeSelected; i++) {
+            for (int j = 0; j < sizeSelected; j++) {
                 System.out.print(matrix[i][j] + " ");
             }
             System.out.println();
         }
         System.out.println();
-
-        
-        if (headX+x_dir[newHeadDir]==foodX && headY+y_dir[newHeadDir]==foodY) {
-            matrix[headX][headY] = '*';
-            foodX = getRandomInt(0, sizeSelected);
-            foodY = getRandomInt(0, sizeSelected);
-            matrix[foodX][foodY] = '@';
-        } else {
-            matrix[tailX][tailY] = '.';
-            tailX += x_dir[headDir];
-            tailY += y_dir[headDir];
-            matrix[headX][headY] = '*';
-        }
-        headDir = newHeadDir;
-        headX += x_dir[headDir];
-        headY += y_dir[headDir];
-        if (headX==-1 || headY==-1 || headX==10 || headY==10) {
-            System.out.println("Game Ended!");
-            Match.gameStatus = false;
-            // timer.cancel();
-        }
-        matrix[headX][headY] = getHeadChar(headDir);        
     }
 
-
+    @Override
+    public void run() {
+        if (snake.getNextHeadX() == food.getX() && snake.getNextHeadY() == food.getY()) {
+            System.out.println("Eating food");
+            snake.eat(this, food);
+        } else 
+            snake.moveTail(this);
+        snake.moveHead(this, timer);  
+        if (gameStatus != false)
+        printBoard();
+    }
 }

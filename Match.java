@@ -1,66 +1,59 @@
 import java.util.Scanner;
 import java.util.Timer;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Match {
-    private GameBoard gameBoard;
     private Player player;
-    private Snake snake;
-    Timer timer;
     public static boolean gameStatus = true;
+    private final int EASY = 1;
+    private final int MEDIUM = 2;
+    private final int HARD = 4;
+    private int difficulty = EASY;
 
     public Match(Player player) {
         this.player = player;
     }
 
-    int getRandomInt (int min, int max) {
-        return ThreadLocalRandom.current().nextInt(min, max);
-    }
-
-    static char getHeadChar (int n) {
-        char ch;
-        switch (n) {
-            case 0:
-                ch = '^';
-                break;
+    public void startMatch() {
+        Scanner sc;
+        Timer timer = new Timer();
+        // Initialise GameBoard
+        GameBoard gameBoard = new GameBoard(timer);
+        gameBoard.displaySizeOptions();
+        sc = new Scanner(System.in);
+        int ch = sc.nextInt();
+        gameBoard.initGameBoard(ch);
+        
+        System.out.println("Enter 1 for easy, 2 for medium, 3 for hard");
+        sc = new Scanner(System.in);
+        int diff = sc.nextInt();
+        switch (diff) {
             case 1:
-                ch = 'v';
+                difficulty = EASY; 
                 break;
             case 2:
-                ch = '<';
+                difficulty = MEDIUM; 
                 break;
             case 3:
-                ch = '>';
+                difficulty = HARD; 
                 break;
         
             default:
-                ch = '~';
+                difficulty = EASY;
                 break;
         }
-        return ch;
-    }
-
-
-    public void startMatch() {
-        // Initialise GameBoard
-        gameBoard = new GameBoard();
-        gameBoard.displaySizeOptions();
-        Scanner sc = new Scanner(System.in);
-        int index = sc.nextInt();
-        gameBoard.selectSize(index);
-        int n = gameBoard.getSizeSelected();
         
-        snake = new Snake(n);
+        Snake snake = new Snake(gameBoard.getSizeSelected());
         gameBoard.positionSnake(snake);
-        gameBoard.positionFood();
 
-        timer = new Timer();
-        timer.schedule(new GameBoard(), 0, 2000);
+        Food food = new Food('@');
+        gameBoard.positionFood(food);
+
+        timer.schedule(gameBoard, 1000, 4000/difficulty);
         while (gameStatus) {
             Scanner obj = new Scanner(System.in);
             Game.userInput = obj.nextLine().charAt(0);
             int in = (int)Game.userInput - 48;
-            snake.newHeadDir = in;
+            snake.setNextHeadDir(in);
         }
     }
 }

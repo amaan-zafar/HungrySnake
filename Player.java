@@ -5,6 +5,7 @@ public class Player {
     // private boolean isRegistered;
     private boolean isLoggedIn;
     private int currScore;
+    private int highestScore;
 
     public Player(String name) {
         players++;
@@ -25,8 +26,14 @@ public class Player {
         return this.currScore;
     }
 
+    public int getHighestScore() {
+        return highestScore;
+    }
+
     public void setCurrScore(int currScore) {
         this.currScore = currScore;
+        if (currScore > highestScore)
+            highestScore = currScore;
     }
 
     // public boolean isRegistered() {
