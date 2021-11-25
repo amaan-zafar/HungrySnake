@@ -18,10 +18,10 @@ public class Match {
         Timer timer = new Timer();
         // Initialise GameBoard
         GameBoard gameBoard = new GameBoard(timer);
-        gameBoard.displaySizeOptions();
+        GameBoard.displaySizeOptions();
         sc = new Scanner(System.in);
-        int ch = sc.nextInt();
-        gameBoard.initGameBoard(ch);
+        int boardSizeChoice = sc.nextInt();
+        gameBoard.initGameBoard(boardSizeChoice);
         
         System.out.println("Enter 1 for easy, 2 for medium, 3 for hard");
         sc = new Scanner(System.in);
@@ -51,9 +51,12 @@ public class Match {
         timer.schedule(gameBoard, 1000, 4000/difficulty);
         while (gameStatus) {
             Scanner obj = new Scanner(System.in);
-            Game.userInput = obj.nextLine().charAt(0);
-            int in = (int)Game.userInput - 48;
+            char input = obj.nextLine().charAt(0);
+            int in = (int)input - 48;
             snake.setNextHeadDir(in);
         }
+        int score = gameBoard.getFinalScore(difficulty);
+        System.out.println("Your score is : " + score);
+        player.updateScoreInDb(score, boardSizeChoice);
     }
 }

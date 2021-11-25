@@ -1,0 +1,4 @@
+amaan,zafar,0,0,5,0
+sarthak,vatsa,3,4,60,7
+pulkit,gupta,4,5,80,9
+dwij,mehta,3,5,0,7

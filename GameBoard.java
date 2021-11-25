@@ -9,8 +9,10 @@ public class GameBoard extends TimerTask{
     public char[][] matrix;
     private Snake snake;
     private Food food;
-    boolean gameStatus = true;
     private Timer timer;
+    boolean gameStatus = true;
+    private int iterations;
+    public int noOfFoodEaten;
 
     public GameBoard(Timer timer) {
         this.timer = timer;
@@ -20,7 +22,7 @@ public class GameBoard extends TimerTask{
         boardSizes.add(size);
     }
 
-    public void displaySizeOptions () {
+    public static void displaySizeOptions () {
         for (int i = 0; i < boardSizes.size(); i++) {
             System.out.println("Enter " + i + " to select " + boardSizes.get(i) + "x" + boardSizes.get(i) + "size board");
         }
@@ -40,7 +42,6 @@ public class GameBoard extends TimerTask{
         return this.sizeSelected;
     }
 
-    
     private int getRandomInt (int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max);
     }
@@ -73,6 +74,12 @@ public class GameBoard extends TimerTask{
         System.out.println();
     }
 
+    public int getFinalScore (int difficulty) {
+        int timeInSec = (iterations * 4)/difficulty;
+        int score = timeInSec * difficulty + noOfFoodEaten * 10;
+        return score;
+    }
+
     @Override
     public void run() {
         if (snake.getNextHeadX() == food.getX() && snake.getNextHeadY() == food.getY()) {
@@ -81,7 +88,9 @@ public class GameBoard extends TimerTask{
         } else 
             snake.moveTail(this);
         snake.moveHead(this, timer);  
-        if (gameStatus != false)
-        printBoard();
+        if (gameStatus != false) {
+            printBoard();
+            iterations++;
+        }
     }
 }

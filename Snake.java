@@ -22,8 +22,6 @@ public class Snake {
         
         tail.setX(head.getX() - X_DIR[headDir]);
         tail.setY(head.getY() - Y_DIR[headDir]);
-
-        System.out.println("Snake : " + head.getX() + tail.getY());
     }
     
     private int getRandomInt (int min, int max) {
@@ -51,6 +49,7 @@ public class Snake {
         }
         return ch;
     }
+    
     public Square getHead() {
         return head;
     }
@@ -85,6 +84,7 @@ public class Snake {
 
     public void eat (GameBoard gameBoard, Food food) {
         gameBoard.matrix[head.getX()][head.getY()] = tail.getSymbol();
+        gameBoard.noOfFoodEaten++;
         gameBoard.positionFood(food);
     }
 
@@ -103,8 +103,9 @@ public class Snake {
         head.setX(head.getX() + X_DIR[nextHeadDir]);
         head.setY(head.getY() + Y_DIR[nextHeadDir]);
         if (head.getX() == -1 || head.getY() == -1 || head.getX() == gameBoard.getSizeSelected() || head.getY() == gameBoard.getSizeSelected()) {
-            System.out.println("Game Ended!");
+            System.out.println("Game Ended!\nEnter 1 to know your score");
             gameBoard.gameStatus = false;
+            Match.gameStatus = false;
             timer.cancel();
         } else
         gameBoard.matrix[head.getX()][head.getY()] = getHeadChar(nextHeadDir);
