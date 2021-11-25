@@ -41,7 +41,7 @@ public class Main{
             Match match = new Match(player);
             match.startMatch();
         } else if (ch==2) {
-            player.logOut();
+            loginPlayer();
         } else {
             System.out.println("INVALID INPUT! PROVIDE A VALID INPUT");
             start_logout(player);
@@ -76,22 +76,27 @@ public class Main{
             Scanner fr = new Scanner(new File("userdb.txt"));
             while (fr.hasNextLine()) {
                 String line = fr.nextLine();
-                LBRow lbRow = new LBRow(line);
-                leaderBoard.add(lbRow);
+                if (!line.equals("")) {
+                    LBRow lbRow = new LBRow(line);
+                    leaderBoard.add(lbRow);
+                }
             }
             fr.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
+
+    private static void loginPlayer() throws IOException, FileNotFoundException {
+        LoginSignup ls = new LoginSignup();
+        Player curPlayer = ls.loginSignupOption();
+        start_logout(curPlayer);
+    }
         
     public static void main(String[] args) throws IOException, FileNotFoundException {
         initBoardSizes();
-        // display();
-        // LoginSignup ls = new LoginSignup();
-        // Player curPlayer = ls.loginSignupOption();
-        // start_logout(curPlayer);
-        // new Match(new Player("amaan", "zafar")).startMatch();
+        display();
+        loginPlayer();
         showLeaderBoard();  
     }
 }

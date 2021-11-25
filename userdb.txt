@@ -1,10 +1,5 @@
-amaan,zafar,10,20,25,40
-sarthak,vatsa,35,24,60,70
-pulkit,gupta,4,5,80,90
-dwij,mehta,30,50,0,75
-rahul,kumar,45,64,56,30
-hari,shankar,35,50,40,60
-rahul,kumar,45,40,50,30
-hari,shankar,35,50,40,62
-mann,yadav,5,65,55,32
-smriti,mishra,35,50,40,60
+amaan,zafar,0,0,0,0
+sarthak,vatsa,0,0,0,0
+rohan,kunwar,0,0,0,0
+smriti,mishra,0,0,0,0
+dwij,mehta,0,0,0,0

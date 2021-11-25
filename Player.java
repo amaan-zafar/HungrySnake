@@ -7,12 +7,10 @@ import java.util.Scanner;
 public class Player {
     private String userName;
     private String password;
-    private boolean isLoggedIn;
     
     public Player(String userName, String password) {
         this.userName = userName;
         this.password = password;
-        this.isLoggedIn = true;
     }
 
     public String getuserName() {
@@ -21,10 +19,6 @@ public class Player {
 
     public String getPassword() {
         return password;
-    }
-
-    public void logOut() {
-        this.isLoggedIn = false;
     }
 
     public void updateScoreInDb (int newScore, int boardSizeChoice) {
@@ -41,7 +35,7 @@ public class Player {
                         line = String.join(",", data);
                     }
                 }
-                buffer.append(line + System.lineSeparator());
+                buffer.append(line);
             }
             fr.close();
             PrintWriter fw = new PrintWriter(new FileOutputStream("userdb.txt"));
