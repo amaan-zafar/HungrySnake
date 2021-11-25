@@ -7,12 +7,12 @@ import java.util.Scanner;
 
 
 public class LoginSignup {
-    String userName;
-    String password;
+    private String userName;
+    private String password;
 
     public LoginSignup(){//constructor
-      userName="";
-      password="";
+      this.userName="";
+      this.password="";
     }  
       
     public Player loginSignupOption() throws FileNotFoundException, IOException{
