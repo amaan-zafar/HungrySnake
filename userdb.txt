@@ -1,4 +1,4 @@
-amaan,zafar,0,0,0,0
+amaan,zafar,0,94,0,0
 sarthak,vatsa,0,0,0,0
 rohan,kunwar,0,0,0,0
 smriti,mishra,0,0,0,0
